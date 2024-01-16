@@ -3,6 +3,8 @@ package br.ufmg.dcc.labsoft.jextract.ui;
 import java.util.Collections;
 import java.util.List;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -33,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
@@ -265,6 +268,23 @@ public class ExtractMethodRecomendationsView extends ViewPart {
 		manager.add(new Separator());
 	}
 
+	private static String uniqify(String path){
+		String[] tokens = path.split("\\.(?=[^\\.]+$)");
+		String base = tokens[0];
+		String extension = tokens[1];
+
+		Integer count = 1;
+		String fileName = base + "." + extension;
+		File f = new File(fileName);
+		while(f.isFile()){
+			fileName = base + String.format("(%s).", count) + extension;
+			f = new File(fileName);
+			count += 1;
+		}
+
+		return fileName;
+	}
+
 	private void makeActions() {
 		actionExplainScore = new Action() {
 			public void run() {
@@ -285,12 +305,13 @@ public class ExtractMethodRecomendationsView extends ViewPart {
 				//showMessage(String.format("Data saved at %s", outputPath));
 				
 				// This option allows the user to select where will save the file
-				FileDialog fd = new FileDialog(getSite().getWorkbenchWindow().getShell());
-				fd.setText("Save Results");
-		        String[] filterExt = { "*.txt" };
-		        fd.setFilterExtensions(filterExt);
-				String selected = fd.open() + ".txt";
+				showMessage("Select destination directory.");
+				DirectoryDialog dd = new DirectoryDialog(getSite().getWorkbenchWindow().getShell());
+				String outFile = "JextractOut";
+				String selected = dd.open() + "/" + String.format("%s.txt", outFile);
+				selected = uniqify(selected);
 				new EmrFileExporter(recomendations, selected).export();
+				showMessage(String.format("Data saved at %s", selected));
 			}
 		};
 		actionExport.setText("Save to file");
@@ -373,7 +394,7 @@ public class ExtractMethodRecomendationsView extends ViewPart {
 			IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
 			ITextEditor sourceEditor = (ITextEditor) JavaUI.openInEditor(sourceJavaElement);
 
-			// limpa as anotações
+			// limpa as anotaï¿½ï¿½es
 			sourceFile.deleteMarkers("br.ufmg.dcc.labsoft.jextract.extractionslice", true, IResource.DEPTH_ONE);
 			sourceFile.deleteMarkers("br.ufmg.dcc.labsoft.jextract.extractionslicedup", true, IResource.DEPTH_ONE);
 
