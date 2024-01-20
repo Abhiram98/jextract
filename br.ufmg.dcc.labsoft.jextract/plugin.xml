@@ -169,5 +169,18 @@
          verticalRulerPreferenceValue="true">
    </specification>
 </extension>
+<extension
+      point="org.eclipse.core.runtime.applications"
+      id="br.ufmg.dcc.labsoft.jextract.cli"
+      name="JExtract">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="br.ufmg.dcc.labsoft.jextract.cli.JextractMain">
+         </run>
+      </application>
+</extension>
 
 </plugin>
