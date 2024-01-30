@@ -147,7 +147,7 @@ public class JExtractCLI implements Runnable{
         settings.setPenalty(reorderPenalty);
         settings.setMinExtractedSize(minExtractedStatements);
         settings.setMaxFragments(maxFragments);
-        settings.javaProject = javaProject;
+//        settings.javaProject = javaProject;
 
 
         // TODO: Call JExtract.

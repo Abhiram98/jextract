@@ -25,4 +25,5 @@ Export-Package: br.ufmg.dcc.labsoft.jextract,
  br.ufmg.dcc.labsoft.jextract.ranking,
  br.ufmg.dcc.labsoft.jextract.ui
 Bundle-ClassPath: lib/picocli-4.7.5.jar,
- .
+ .,
+ lib/gson-2.10.1.jar

@@ -45,12 +45,26 @@ public class EmrGenerator {
 	
 	//private double[][] matrix;
 	//private ICompilationUnit msrc;
-	
+	private String onlyThisFile=null;
+
+	private String onlyThisMethodStr = null;
+
+	public Boolean foundFile = false;
+	public Boolean foundMethod = false;
+	public Boolean noSource = false;
+
 	public EmrGenerator(List<ExtractMethodRecomendation> recomendations, Settings settings) {
 		this.settings = settings;
 		this.recomendations = recomendations;
 		this.recommender = new EmrRecommender(settings);
 		this.scoringFn = EmrScoringFunction.getInstance(settings);
+	}
+
+	public void setOnlyThisFile(String fileName){
+		this.onlyThisFile = fileName;
+	}
+	public void setOnlyThisMethodStr(String methodStr){
+		this.onlyThisMethodStr = methodStr;
 	}
 
 	public EmrRecommender getRecommender() {
@@ -62,10 +76,20 @@ public class EmrGenerator {
 			@Override
 			public boolean visit(IResource resource) throws CoreException {
 				if (resource instanceof IFile && resource.getName().endsWith(".java")) {
+					IFile visitedFile = (IFile) resource;
+					String visitedFilePath = visitedFile.getProjectRelativePath().toString();
+					if (onlyThisFile!=null && !visitedFilePath.equals(onlyThisFile)){
+						System.out.println("Skipping file "+ visitedFilePath);
+						return true;
+					}
+					System.out.println("Found file "+ visitedFilePath);
+					foundFile=true;
 					ICompilationUnit unit = ((ICompilationUnit) JavaCore.create((IFile) resource));
 					try {
 						unit.getSource();
 					} catch (Exception e) {
+						System.out.println("Couldnt get source.");
+						noSource=true;
 						return true;
 						// ICompilationUnit ignored when its source is not available
 					}
@@ -83,7 +107,7 @@ public class EmrGenerator {
 	// use ASTParse to parse string
 	protected final void analyseMethods(final ICompilationUnit src, final IMethod onlyThisMethod) throws JavaModelException {
 
-		ASTParser parser = ASTParser.newParser(AST.JLS4);
+		ASTParser parser = ASTParser.newParser(AST.JLS17);
 		parser.setSource(src);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
@@ -98,6 +122,16 @@ public class EmrGenerator {
 				IMethodBinding binding = methodDeclaration.resolveBinding();
 				if (binding != null) {
 					IMethod javaElement = (IMethod) binding.getJavaElement();
+					if (javaElement==null){
+						return false;
+					}
+					if (onlyThisMethodStr!=null &&
+							javaElement.getElementName().equals(onlyThisMethodStr)==false){
+						System.out.println("Different method name: "+javaElement.getElementName());
+						return false;
+					}
+					foundMethod=true;
+					System.out.println("Found method:"+ javaElement.getElementName());
 					if (onlyThisMethod == null || onlyThisMethod.isSimilar(javaElement)) {
 						analyseMethod(src, methodDeclaration);
 					}
