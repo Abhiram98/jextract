@@ -4,7 +4,7 @@ JExtract
 JExtract is a Extract Method Refactoring recommendation tool
 
 # Building the plugin
-Follow the first two steps [here](https://medium.com/@ravi_theja/creating-your-first-eclipse-plugin-9b1b5ba33b58) 
+Follow the first step [here](https://medium.com/@ravi_theja/creating-your-first-eclipse-plugin-9b1b5ba33b58) 
 to setup your eclipse environment.
 
 # Running Custom Evaluation
@@ -16,7 +16,9 @@ to setup your eclipse environment.
 2. Launch Jextract 
 3. Right click on project:
 
-   `Jextract -> Find Extract Method Opportuniies ->`
+   `Jextract -> Find Extract Method Opportuniies -> <Choose Settings> -> OK`
+4. Results of running JExtract will be saved in this format:
+   `OUT_DIRECTORY/<PROJECT-NAME>-<COUNT>.txt`
 # CLI
 
 Java version: java 11
