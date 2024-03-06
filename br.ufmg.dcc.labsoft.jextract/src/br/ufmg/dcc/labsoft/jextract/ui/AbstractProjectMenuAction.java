@@ -105,7 +105,6 @@ public abstract class AbstractProjectMenuAction<T> extends ObjectMenuAction<T> {
 			System.out.println(fileName);
 			System.out.println(functionName);
 
-			count+=1;
 
 //			 Change git to Sha
 			Runtime rt = checkoutGitSHA(projectPath, sha);
