@@ -1,0 +1,14 @@
+[
+ {
+  "projectName": "<project_name>",
+  "sha": "<sha_id>",
+  "filename": "<relative filepath>",
+  "functionName": "<function-name>"
+ },
+ {
+  "projectName": "CoreNLP",
+  "sha": "954facf8c2c8133b6790c0a0be904cef87274060",
+  "filename": "src/edu/stanford/nlp/parser/lexparser/TreeCollinizer.java",
+  "functionName": "transformTree"
+ }
+]
