@@ -97,13 +97,17 @@ public abstract class AbstractProjectMenuAction<T> extends ObjectMenuAction<T> {
 			}
 			JsonObject ref = (JsonObject) obj;
 			String pname = ref.get("projectName").toString().replaceAll("\"", "");
-			String sha = ref.get("sha").toString().replaceAll("\"", "");
-			String fileName = ref.get("filename").toString().replaceAll("\"", "");
-			String functionName = ref.get("functionName").toString().replaceAll("\"", "");
+			String sha = ref.get("ParentSHA").toString().replaceAll("\"", "");
+//			String fileName = ref.get("filename").toString().replaceAll("\"", "");
+			String fileName = ref.get("sub_project_filename").toString().replaceAll("\"", "");
+			String functionName = ref.get("host_functionName").toString().replaceAll("\"", "");
+			String id = ref.get("ID").toString();
 			System.out.println(pname);
 			System.out.println(sha);
 			System.out.println(fileName);
 			System.out.println(functionName);
+			System.out.println(id);
+			
 
 
 //			 Change git to Sha
@@ -111,7 +115,7 @@ public abstract class AbstractProjectMenuAction<T> extends ObjectMenuAction<T> {
 
 			restoreDotProject(basePath, projectName, projectPath);
 			restoreClasspath(basePath, projectName, projectPath);
-			String outFile = outDir+projectName+"-"+count.toString();
+			String outFile = outDir+projectName+"-"+id;
 
 			try {
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
